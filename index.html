@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>粮库项目管理系统</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
+              sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"'],
+            },
+            colors: {
+              dashboard: {
+                bg: '#f0f2f5',      /* Light Background */
+                card: 'rgba(255, 255, 255, 0.65)',    /* Frosted Glass Card */
+                hover: 'rgba(255, 255, 255, 0.8)',
+                border: 'rgba(255, 255, 255, 0.6)',
+                text: '#334155',    /* Slate 700 */
+                textHighlight: '#0f172a', /* Slate 900 */
+              },
+              neon: {
+                blue: '#3b82f6',    /* Blue 500 */
+                cyan: '#06b6d4',    /* Cyan 500 */
+                green: '#10b981',   /* Emerald 500 */
+                purple: '#8b5cf6',  /* Violet 500 */
+                orange: '#f59e0b',  /* Amber 500 */
+              }
+            },
+            boxShadow: {
+              'card': '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
+              'glass': 'inset 0 0 0 1px rgba(255, 255, 255, 0.5)',
+              'glow-blue': '0 0 15px rgba(59, 130, 246, 0.3)',
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- DHTMLX Gantt -->
+    <script src="https://cdn.jsdelivr.net/npm/dhtmlx-gantt@7.1.13/codebase/dhtmlxgantt.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/dhtmlx-gantt@7.1.13/codebase/dhtmlxgantt.css" rel="stylesheet">
+    
+    <!-- jsMind -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsmind@0.5/style/jsmind.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsmind@0.5/js/jsmind.js" crossorigin="anonymous"></script>
+    
+    <style>
+      body {
+        /* Soft Gradient Mesh Background */
+        background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                    radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                    radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+        background-color: #f3f4f6;
+        background-image: 
+            radial-gradient(at 40% 20%, hsla(215,98%,61%,0.15) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, hsla(189,100%,56%,0.15) 0px, transparent 50%),
+            radial-gradient(at 0% 50%, hsla(340,100%,76%,0.15) 0px, transparent 50%),
+            radial-gradient(at 80% 50%, hsla(240,100%,70%,0.15) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, hsla(260,100%,70%,0.15) 0px, transparent 50%),
+            radial-gradient(at 80% 100%, hsla(240,100%,70%,0.15) 0px, transparent 50%),
+            radial-gradient(at 0% 0%, hsla(340,100%,76%,0.15) 0px, transparent 50%);
+        color: #334155;
+        font-family: 'Inter', system-ui, sans-serif;
+        overflow: hidden;
+      }
+
+      /* Scrollbar Styling - Thin & Light */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+      ::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+      /* --- DHTMLX Gantt Overrides for "Frosted Light" Theme --- */
+      
+      .gantt_container {
+        background-color: transparent !important;
+        border: none !important;
+        font-family: 'Inter', sans-serif !important;
+      }
+
+      /* Grid / Sidebar */
+      .gantt_grid_scale {
+        background-color: rgba(255,255,255,0.8) !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        backdrop-filter: blur(5px);
+      }
+      .gantt_grid_head_cell {
+        color: #475569 !important;
+        font-weight: 700;
+        font-size: 13px;
+        border-right: 1px solid #e2e8f0 !important;
+      }
+      .gantt_grid_data .gantt_row {
+        background-color: transparent !important; /* Let glass background show */
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        color: #334155 !important;
+        transition: background-color 0.2s;
+      }
+      .gantt_grid_data .gantt_row.odd {
+        background-color: rgba(255,255,255,0.3) !important;
+      }
+      .gantt_grid_data .gantt_row:hover {
+        background-color: rgba(255,255,255,0.6) !important;
+      }
+      .gantt_grid_data .gantt_row.gantt_selected {
+        background-color: rgba(59, 130, 246, 0.15) !important;
+      }
+      .gantt_cell {
+        border-right: 1px solid rgba(0,0,0,0.05) !important;
+        color: #334155 !important;
+      }
+
+      /* Timeline / Header */
+      .gantt_task_scale {
+        background-color: rgba(255,255,255,0.8) !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        backdrop-filter: blur(5px);
+      }
+      .gantt_scale_cell {
+        color: #475569 !important;
+        border-right: 1px solid #e2e8f0 !important;
+        font-weight: 600;
+      }
+      
+      .gantt_task_row {
+        background-color: transparent !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+      }
+      .gantt_task_row.odd {
+        background-color: rgba(255,255,255,0.3) !important;
+      }
+      .gantt_task_row:hover {
+        background-color: rgba(255,255,255,0.6) !important;
+      }
+      
+      /* Vertical Grid Lines in Timeline */
+      .gantt_task_cell {
+        border-right: 1px solid rgba(0,0,0,0.05) !important;
+      }
+
+      /* Task Bars - Modern Pill Shape with Gradient Overlay */
+      .gantt_task_line {
+        border-radius: 6px !important;
+        border: none !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Add a subtle shine gradient on top of the dynamic background color */
+        background-image: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.05) 100%) !important;
+      }
+      .gantt_task_content {
+        color: #fff !important;
+        font-weight: 600;
+        font-size: 12px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        padding-left: 5px;
+      }
+      .gantt_task_progress {
+        background-color: rgba(255,255,255,0.25) !important;
+        border-radius: 6px 0 0 6px;
+      }
+      
+      /* Links */
+      .gantt_line_wrapper div {
+        background-color: #94a3b8 !important;
+      }
+      .gantt_link_arrow {
+        border-color: #94a3b8 !important;
+      }
+
+      /* --- Dynamic Pulse Today Line --- */
+      .gantt_marker.today-line {
+        background: linear-gradient(180deg, rgba(59, 130, 246, 0) 0%, #3b82f6 50%, rgba(59, 130, 246, 0) 100%) !important;
+        width: 2px !important;
+        box-shadow: 0 0 10px #3b82f6;
+        z-index: 9999 !important;
+        pointer-events: none;
+      }
+      
+      .gantt_marker_content {
+        background: #3b82f6 !important;
+        color: #fff !important;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+        transform: translate(-50%, 0);
+      }
+
+      /* --- Custom Tooltip (Frosted Glass Style) - Enhanced --- */
+      .gantt_tooltip {
+        background: rgba(255, 255, 255, 0.75) !important;
+        border: 1px solid rgba(255,255,255,0.8) !important;
+        border-left: 4px solid #3b82f6 !important;
+        color: #1e293b !important;
+        padding: 0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+        z-index: 99999 !important;
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        font-family: 'Inter', sans-serif !important;
+        overflow: hidden;
+        max-width: 320px !important; /* Limit width */
+        white-space: normal !important; /* Allow wrapping */
+        pointer-events: none !important; /* CRITICAL: Prevents flickering when mouse moves */
+      }
+
+      /* jsMind Overrides */
+      jmnodes.theme-primary jmnode {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #334155 !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+      }
+      jmnodes.theme-primary jmnode:hover {
+        background-color: #fff !important;
+        border-color: #3b82f6 !important;
+        box-shadow: 0 8px 15px rgba(59, 130, 246, 0.15);
+      }
+      jmnodes.theme-primary jmnode.selected {
+        background-color: #3b82f6 !important;
+        border-color: #2563eb !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+      jsmind-inner { background: transparent !important; }
+
+      /* Print Styles */
+      @media print {
+        @page { margin: 0.5cm; size: landscape; }
+        .no-print { display: none !important; }
+        .print-only { display: block !important; }
+        body, html { background: white !important; color: black !important; }
+        .gantt_container, .gantt_grid, .gantt_task, .gantt_row, .gantt_task_row {
+          background-color: white !important;
+          color: black !important;
+          border-color: #ccc !important;
+        }
+        .gantt_task_line { box-shadow: none !important; border: 1px solid #000 !important; }
+      }
+      .print-only { display: none; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+  <body class="antialiased selection:bg-blue-100 selection:text-blue-900">
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+import { AppState } from './types';
+
+export const INITIAL_STATE: AppState = {
+  projectTitle: "西平县粮库设计项目",
+  ganttData: {
+    data: [
+      { id: 1764680466905, start_date: "2025-11-28", text: "资料收集及准备工作", duration: 3, progress: 0, parent: 0, details: "收集图纸，确定合作伙伴", color: "#909399", remarks: "浅圆仓纯外部协同" },
+      { id: 1, text: "🛑P1：天河库平房仓标准库套图部分图纸（60X24）🛑", details: "各专业均为翻图，需注意图面调整", start_date: "2025-12-01", duration: 9, open: true, type: "task", color: "#409EFF", progress: 0, parent: 0 },
+      { id: 11, text: "项目启动会", details: "全员参加", start_date: "2025-12-01", duration: 1, parent: 1, progress: 0, color: "#909399", remarks: "" },
+      { id: 12, text: "总图、建筑提图", details: "单体尺寸优化/路网/消防/竖向", start_date: "2025-12-02", duration: 2, parent: 1, progress: 0, color: "" },
+      { id: 1764680466985, start_date: "2025-12-02", text: "地勘委托书（仅天河库）", duration: 1, progress: 0, parent: 1, details: "", color: "" },
+      { id: 1764680466988, start_date: "2025-12-03", text: "地勘中间资料(仅天河库，其他库参考)", duration: 7, parent: 1, progress: 0, details: "", color: "" },
+      { id: 13, text: "工艺图纸整理", details: "流程图、设备选型、平剖面图等", start_date: "2025-12-03", duration: 3, parent: 1, progress: 0, color: "" },
+      { id: 14, text: "建筑及总图图纸整理", details: "平立剖、节点详图、说明，注意防水", start_date: "2025-12-03", duration: 3, parent: 1, progress: 0, color: "" },
+      { id: 1764680466991, start_date: "2025-12-03", text: "结构图纸整理", duration: 3, progress: 0, parent: 1, details: "关注计算书", color: "", remarks: "" },
+      { id: 1764680466997, start_date: "2025-12-03", text: "设备图纸整理", duration: 3, progress: 0, parent: 1, details: "粉尘、防爆、配电，（智能化）", color: "", remarks: "智能化遗留待决" },
+      { id: 1764680466999, start_date: "2025-12-06", text: "🛑第一批图纸工大院校审，修改意见后提供甲方🛑", duration: 4, parent: 1, progress: 0, details: "各专业对图，发工大院校审，修改意见后提供甲方", color: "#E6A23C" },
+      { id: 2, text: "🛑P2:非标尺寸平房仓部分及综合楼、站房部分图纸🛑", details: "荷载计算", start_date: "2025-12-05", duration: 15, open: true, type: "project", color: "#409EFF", progress: 0, parent: 0 },
+      { id: 1764680467032, start_date: "2025-12-05", text: "建筑提平行作业图及参考图", duration: 3, parent: 2, progress: 0, details: "定非标库标准尺寸，参考图纸", color: "" },
+      { id: 21, text: "建筑、总图专业图纸绘制", details: "", start_date: "2025-12-07", duration: 8, parent: 2, progress: 0, color: "" },
+      { id: 22, text: "结构专业图纸绘制", details: "提资孔洞", start_date: "2025-12-07", duration: 8, parent: 2, progress: 0, color: "" },
+      { id: 23, text: "水暖电专业图纸绘制", details: "粉尘防爆", start_date: "2025-12-07", duration: 8, parent: 2, progress: 0, color: "" },
+      { id: 24, text: "工艺图纸绘制", details: "基础及配筋", start_date: "2025-12-07", duration: 8, parent: 2, progress: 0, color: "" },
+      { id: 25, text: "各专业互提及套图", details: "", start_date: "2025-12-13", duration: 3, parent: 2, progress: 0, color: "" },
+      { id: 1764680467033, start_date: "2025-12-16", text: "🛑第二批图纸发工大院审核修改，整理计算交付🛑", duration: 4, parent: 2, progress: 0, details: "", color: "" },
+      { id: 3, text: "🛑P3：场区部分图纸🛑", details: "无外部接入条件，结合情况暂定场区方案出图，后续实施再做修改", start_date: "2025-12-10", duration: 12, open: true, type: "task", color: "#409EFF", progress: 0, parent: 0 },
+      { id: 31, text: "建筑提设备、总图", details: "管线碰撞", start_date: "2025-12-10", duration: 2, parent: 3, progress: 0 },
+      { id: 32, text: "设备深化图纸", details: "", start_date: "2025-12-12", duration: 6, parent: 3, progress: 0, color: "" },
+      { id: 33, text: "各专业套图、校审", details: "蓝图", start_date: "2025-12-18", duration: 4, parent: 3, progress: 0, color: "" },
+      { id: 34, text: "🛑场区成果交付🛑", details: "电子+蓝图", start_date: "2025-12-22", duration: 2, parent: 3, type: "task", color: "#F56C6C", progress: 0 }
+    ],
+    links: [
+      { id: 1, source: 11, target: 12, type: "0" },
+      { id: 2, source: 11, target: 13, type: "0" },
+      { id: 8, source: 31, target: 32, type: "0" },
+      { id: 9, source: 32, target: 33, type: "0" },
+      { id: 10, source: 33, target: 34, type: "0" },
+      { source: "1764680466905", target: "1", type: "0", id: 1764680466944 },
+      { source: "1764680466985", target: "12", type: "1", id: 1764680466986 },
+      { source: "1764680466985", target: "1764680466988", type: "0", id: 1764680466990 },
+      { source: "11", target: "14", type: "0", id: 1764680466993 },
+      { source: "11", target: "1764680466991", type: "0", id: 1764680466994 },
+      { source: "11", target: "1764680466997", type: "0", id: 1764680466998 },
+      { source: "13", target: "1764680466999", type: "0", id: 1764680467000 },
+      { source: "1764680466991", target: "1764680466999", type: "0", id: 1764680467001 },
+      { source: "1764680466997", target: "1764680466999", type: "0", id: 1764680467002 },
+      { source: "14", target: "1764680466999", type: "0", id: 1764680467003 },
+      { source: "12", target: "2", type: "0", id: 1764680467034 },
+      { source: "12", target: "1764680467032", type: "0", id: 1764680467035 },
+      { source: "1764680467032", target: "21", type: "0", id: 1764680467042 },
+      { source: "1764680467032", target: "22", type: "0", id: 1764680467044 },
+      { source: "1764680467032", target: "23", type: "0", id: 1764680467045 },
+      { source: "1764680467032", target: "24", type: "0", id: 1764680467046 },
+      { source: "21", target: "25", type: "0", id: 1764680467071 },
+      { source: "22", target: "25", type: "0", id: 1764680467072 },
+      { source: "23", target: "25", type: "0", id: 1764680467073 },
+      { source: "24", target: "25", type: "0", id: 1764680467074 },
+      { source: "25", target: "1764680467033", type: "0", id: 1764680467076 }
+    ]
+  },
+  buildingData: [
+    { id: 1, depot: "", name: "平房仓 (标准化)", size: "60x24", note: "全套成图" },
+    { id: 2, depot: "", name: "综合楼1", size: "48X15", note: "成图修改，仅地块1" },
+    { id: 4, depot: "", name: "平房仓非标1", size: "84X24", note: "60X24加面宽" },
+    { id: 5, depot: "", name: "平房仓非标2", size: "72X24，72X18", note: "60X24加面宽/减进深" },
+    { id: 6, depot: "", name: "配电房1及消防泵房", size: "", note: "" },
+    { id: 7, depot: "", name: "配电房2", size: "", note: "" },
+    { id: 8, depot: "", name: "门卫、药品库", size: "", note: "" },
+    { id: 9, depot: "", name: "综合楼2", size: "28X15", note: "全套成图，仅地块2" },
+    { id: 10, depot: "各个地块", name: "单体尽量采用", size: "同尺寸", note: "降低翻图量" }
+  ]
+};

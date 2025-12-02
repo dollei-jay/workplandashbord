@@ -1,0 +1,5 @@
+{
+  "name": "Modern Grain Depot Project Manager",
+  "description": "A comprehensive project management tool featuring Gantt charts, automatic Mind Map generation, and building data management with undo/redo capabilities.",
+  "requestFramePermissions": []
+}
